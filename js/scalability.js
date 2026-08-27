@@ -1,0 +1,27 @@
+import { factorial, findMaxN, formatLargeNumber } from './math-utils.js';
+
+const $=id=>document.getElementById(id);
+const seconds={second:1,minute:60,hour:3600,day:86400,week:604800,year:31536000};
+const complexities=[
+  {id:'log',label:'log₂ n',cost:n=>n<1?0:Math.log2(n)},
+  {id:'linear',label:'n',cost:n=>n},
+  {id:'nlogn',label:'n log₂ n',cost:n=>n<2?0:n*Math.log2(n)},
+  {id:'quadratic',label:'n²',cost:n=>n**2},
+  {id:'cubic',label:'n³',cost:n=>n**3},
+  {id:'exponential',label:'2ⁿ',cost:n=>2**n},
+  {id:'factorial',label:'n!',cost:n=>factorial(n)}
+];
+let baselineSpeed=1000000,hasRun=false,lastResults=null;
+
+function showMessage(kind,text){const box=$('message');box.className=`alert alert-${kind}`;box.textContent=text;}
+function clearMessage(){$('message').className='alert d-none';$('message').textContent='';}
+function readBudget(){const speed=Number($('speed').value),time=Number($('timeValue').value),unit=$('timeUnit').value;if(!Number.isFinite(speed)||speed<=0)throw new RangeError('Processor speed must be a positive number.');if(!Number.isFinite(time)||time<=0)throw new RangeError('Available time must be a positive number.');const operations=speed*time*seconds[unit];if(!Number.isFinite(operations)||operations>Number.MAX_VALUE)throw new RangeError('The computing budget is too large to represent.');return{speed,time,unit,operations};}
+function formatInteger(value){return Number.isSafeInteger(value)&&value<1e15?new Intl.NumberFormat('en-US').format(value):formatLargeNumber(value);}
+function logarithmicResult(operations){const exponent=operations*Math.LOG10E*Math.LN2;if(exponent<15)return formatInteger(Math.floor(2**operations));const exponentText=formatLargeNumber(Math.floor(exponent));return `≈ 10^(${exponentText})`;}
+function calculate(){clearMessage();let budget;try{budget=readBudget();}catch(error){showMessage('danger',error.message);return;}lastResults=complexities.map(item=>{if(item.id==='log')return{...item,n:Number.MAX_SAFE_INTEGER,display:logarithmicResult(budget.operations),beyond:true};const n=findMaxN(item.cost,budget.operations);return{...item,n,display:formatInteger(n),beyond:n===Number.MAX_SAFE_INTEGER};});render(budget);hasRun=true;$('fasterButton').disabled=false;$('observe').classList.remove('d-none');$('explain').classList.remove('d-none');showMessage('success','Computing budget evaluated. Compare the maximum input sizes.');localStorage.setItem('algorithmPlayground.lastModule','scalability');}
+function render(budget){$('budgetSummary').classList.remove('d-none');$('budgetSummary').innerHTML=`<span>Available operations</span><strong>${formatLargeNumber(budget.operations)}</strong><small>${formatInteger(budget.speed)} ops/s × ${budget.time} ${budget.unit}</small>`;$('resultsPanel').classList.remove('d-none');$('resultsBody').innerHTML=lastResults.map(result=>`<tr><th scope="row">${result.label}</th><td class="text-end fw-semibold">${result.display}</td><td>${interpretation(result)}</td></tr>`).join('');}
+function interpretation(result){if(result.id==='log')return 'El máximo excede los enteros representables; se muestra su orden decimal.';if(result.beyond)return 'At least this large; JavaScript cannot distinguish larger consecutive integers.';if(result.n===0)return 'Incluso n = 1 supera el presupuesto.';return `f(${formatInteger(result.n)}) fits${result.n<Number.MAX_SAFE_INTEGER?`; f(${formatInteger(result.n+1)}) does not`:''}.`;}
+function faster(){let speed=Number($('speed').value);if(!Number.isFinite(speed)||speed<=0){showMessage('danger','Processor speed must be a positive number.');return;}$('speed').value=String(speed*1000);calculate();const prediction=document.querySelector('[name=scalabilityPrediction]:checked')?.value,assessment=prediction==='linear'?'Your prediction was correct: the linear algorithm can accept an input about 1000× larger.':prediction==='unsure'?'The experiment shows that the linear algorithm benefits more in maximum input size.':'Compare the rows: the linear algorithm gains much more input size than the exponential algorithm.';showMessage(prediction==='linear'?'success':'info',`The processor is now 1000× faster. ${assessment}`);}
+function invalidate(){if(!hasRun)return;showMessage('info','The scenario changed. Run the experiment again to update the table.');}
+function reset(){baselineSpeed=1000000;$('speed').value=String(baselineSpeed);$('timeValue').value='1';$('timeUnit').value='day';document.querySelectorAll('[name=scalabilityPrediction]').forEach(x=>x.checked=false);$('calculateButton').disabled=true;$('fasterButton').disabled=true;$('resultsPanel').classList.add('d-none');$('budgetSummary').classList.add('d-none');$('observe').classList.add('d-none');$('explain').classList.add('d-none');$('predictionHint').textContent='Selecciona una opción antes de calcular.';hasRun=false;clearMessage();}
+document.querySelectorAll('[name=scalabilityPrediction]').forEach(input=>input.addEventListener('change',()=>{$('calculateButton').disabled=false;$('predictionHint').textContent='Predicción registrada. Ya puedes ejecutar el experimento.';}));document.querySelectorAll('.time-preset').forEach(button=>button.addEventListener('click',()=>{$('timeValue').value='1';$('timeUnit').value=button.dataset.unit;invalidate();}));['speed','timeValue','timeUnit'].forEach(id=>$(id).addEventListener('change',invalidate));$('calculateButton').addEventListener('click',calculate);$('fasterButton').addEventListener('click',faster);$('resetButton').addEventListener('click',reset);

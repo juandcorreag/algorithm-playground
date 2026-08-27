@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scalability Calculator · Algorithm Playground</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="css/app.css" rel="stylesheet">
+  <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <nav class="navbar bg-white border-bottom sticky-top" aria-label="Navegación principal"><div class="container-xl"><a class="navbar-brand fw-semibold" href="index.html">Algorithm Playground</a><span class="navbar-text d-none d-md-inline">Scalability Calculator</span><div class="ms-auto d-flex gap-2"><a class="btn btn-sm btn-outline-primary" href="detective.html">Complexity Detective</a><a class="btn btn-sm btn-outline-secondary" href="index.html">Inicio</a></div></div></nav>
+  <main class="container-xl py-4 py-lg-5">
+    <header class="mb-4"><p class="eyebrow mb-1">SCALABILITY CALCULATOR</p><h1 class="h2">¿Qué tamaño de problema puede resolver un computador?</h1><p class="text-secondary mb-0">Calcula el mayor entero \(n\) cuyo costo satisface \(f(n) \leq R\,T\).</p></header>
+
+    <section class="stage-card mb-4" aria-labelledby="setup-title"><div class="stage-label">COMPUTING BUDGET</div><h2 id="setup-title" class="h5">Configura el escenario</h2>
+      <div class="row g-3"><div class="col-md-5"><label for="speed" class="form-label">Processor speed</label><div class="input-group"><input id="speed" type="number" class="form-control" min="1" step="1" value="1000000"><span class="input-group-text">operations / second</span></div></div><div class="col-md-3"><label for="timeValue" class="form-label">Available time</label><input id="timeValue" type="number" class="form-control" min="0.000001" step="any" value="1"></div><div class="col-md-4"><label for="timeUnit" class="form-label">Unit</label><select id="timeUnit" class="form-select"><option value="second">second</option><option value="minute">minute</option><option value="hour">hour</option><option value="day" selected>day</option><option value="week">week</option><option value="year">year</option></select></div></div>
+      <div class="mt-3"><span class="small text-secondary me-2">Time presets:</span><div class="btn-group flex-wrap" role="group" aria-label="Presets de tiempo"><button class="btn btn-sm btn-outline-secondary time-preset" data-unit="second">1 second</button><button class="btn btn-sm btn-outline-secondary time-preset" data-unit="minute">1 minute</button><button class="btn btn-sm btn-outline-secondary time-preset" data-unit="hour">1 hour</button><button class="btn btn-sm btn-outline-secondary time-preset" data-unit="day">1 day</button><button class="btn btn-sm btn-outline-secondary time-preset" data-unit="year">1 year</button></div></div>
+    </section>
+
+    <section class="stage-card predict-stage mb-4" aria-labelledby="predict-title"><div class="stage-label">PREDICT</div><h2 id="predict-title" class="h5">Which benefits more from a computer that is 1000× faster?</h2><fieldset class="prediction-grid"><legend class="visually-hidden">Selecciona una predicción</legend><label><input type="radio" name="scalabilityPrediction" value="linear"> An O(n) algorithm</label><label><input type="radio" name="scalabilityPrediction" value="exponential"> An O(2ⁿ) algorithm</label><label><input type="radio" name="scalabilityPrediction" value="same"> Both equally</label><label><input type="radio" name="scalabilityPrediction" value="unsure"> I am not sure</label></fieldset><p id="predictionHint" class="form-text mb-0">Selecciona una opción antes de calcular.</p></section>
+
+    <section class="stage-card mb-4" aria-labelledby="experiment-title"><div class="stage-label">EXPERIMENT</div><h2 id="experiment-title" class="visually-hidden">Calcular tamaños máximos</h2><div id="message" class="alert d-none" role="alert" aria-live="polite"></div><div class="d-flex flex-wrap gap-2"><button id="calculateButton" class="btn btn-primary" disabled>Run experiment</button><button id="fasterButton" class="btn btn-outline-primary" disabled>Make computer 1000× faster</button><button id="resetButton" class="btn btn-outline-secondary">Reset</button></div>
+      <div id="budgetSummary" class="budget-summary d-none mt-4"></div>
+      <div id="resultsPanel" class="table-responsive d-none mt-3"><table class="table scalability-table align-middle"><caption class="visually-hidden">Máximo tamaño n para cada complejidad</caption><thead><tr><th scope="col">Complexity</th><th scope="col" class="text-end">Maximum n</th><th scope="col">Interpretation</th></tr></thead><tbody id="resultsBody"></tbody></table></div>
+    </section>
+    <section id="observe" class="stage-card mb-4 d-none"><div class="stage-label">OBSERVE</div><h2 class="h5">Compara el efecto del presupuesto</h2><p>¿Todas las clases de algoritmos permiten resolver problemas 1000 veces mayores?</p><p class="mb-0">Observa especialmente cuánto cambia \(n\) para \(O(n)\) y para \(O(2^n)\).</p></section>
+    <section id="explain" class="stage-card mb-4 d-none"><div class="stage-label">EXPLAIN</div><h2 class="h5">Explica la diferencia</h2><label for="explanation" class="form-label">Complete your explanation:</label><textarea id="explanation" class="form-control" rows="3" placeholder="When the computer becomes 1000× faster, an O(n) algorithm can...&#10;In contrast, an O(2ⁿ) algorithm can only..."></textarea></section>
+    <aside class="language-box"><h2 class="h6">Language Toolbox</h2><span>maximum input size</span><span>operations per second</span><span>benefits more from</span><span>a thousand times faster</span></aside>
+  </main>
+  <script type="module" src="js/scalability.js"></script>
+</body></html>
