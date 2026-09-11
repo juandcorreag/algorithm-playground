@@ -34,6 +34,8 @@ body { color:var(--ink); background:var(--page); }
 .budget-summary strong { text-align:right; font-size:1.25rem; overflow-wrap:anywhere; }
 .budget-summary small { grid-column:1 / -1; color:var(--muted); }
 .scalability-table td:nth-child(2) { min-width:12rem; }
+.family-heading { display:flex; align-items:center; gap:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+.family-number { display:grid; place-items:center; width:2.6rem; height:2.6rem; flex:0 0 auto; border-radius:.7rem; background:var(--ink); color:#fff; font-weight:750; }
 .math-inline { font-family:Georgia,serif; font-style:italic; }
 @media (max-width: 991.98px) { .chart,.chart-empty { height:26rem; min-height:360px; } }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
