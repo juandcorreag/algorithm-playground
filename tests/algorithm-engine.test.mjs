@@ -4,7 +4,7 @@ import { listAlgorithms, getAlgorithm } from '../js/core/algorithm-registry.js';
 import { COUNTER_KEYS, executeAlgorithm } from '../js/core/algorithm-engine.js';
 import { runOperationExperiment } from '../js/core/operation-experiments.js';
 
-assert.deepEqual(listAlgorithms().map(item => item.id), ['find-max', 'linear-search', 'bubble-sort', 'binary-search']);
+assert.deepEqual(listAlgorithms().map(item => item.id), ['find-max', 'linear-search', 'bubble-sort', 'binary-search', 'interval-scheduling', 'interval-partitioning', 'dijkstra', 'prim', 'kruskal']);
 
 const descendingMax = executeAlgorithm('find-max', { array: [9, 7, 4, 1] });
 assert.equal(descendingMax.result, 9);
@@ -40,6 +40,8 @@ for (const execution of [descendingMax, ascendingMax, found, absent]) {
 }
 
 assert.throws(() => getAlgorithm('student-code'), /Unknown predefined algorithm/);
+assert.ok(Object.isFrozen(descendingMax.trace[0]));
+assert.ok(Object.isFrozen(descendingMax.trace[0].variables));
 const countOnly = executeAlgorithm('bubble-sort', { array: [5, 4, 3, 2, 1] }, { collectTrace: false });
 assert.equal(countOnly.trace.length, 0);
 assert.equal(countOnly.counters.comparisons, 10);

@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { validateCheckpointResponse } from '../js/core/checkpoint-validation.js';
+import { createCheckpointSession, createTemporaryBranch, restoreCheckpointState, selectCheckpoints } from '../js/core/decision-checkpoints.js';
+
+const tied = { id:'tie', responseType:'single-choice', prompt:{en:'Choose'}, options:[{id:'a'},{id:'b'},{id:'c'}], validAnswers:['a','b'], hints:[{en:'Use the minimum key.'}], explanation:{en:'A and B are tied.'} };
+assert.equal(validateCheckpointResponse(tied,'a').correct,true);
+assert.equal(validateCheckpointResponse(tied,'b').correct,true);
+assert.equal(validateCheckpointResponse(tied,'c').correct,false);
+assert.equal(validateCheckpointResponse({ ...tied,id:'multi',responseType:'multiple-choice',validAnswers:['a','b'] },['b','a']).correct,true);
+assert.equal(validateCheckpointResponse({ ...tied,id:'number',responseType:'numeric',validAnswers:[10],numericTolerance:.1 },10.05).correct,true);
+assert.equal(validateCheckpointResponse({ ...tied,id:'order',responseType:'order-items',validAnswers:[['b','a','c']] },['b','a','c']).correct,true);
+assert.equal(validateCheckpointResponse({ id:'text',responseType:'short-justification',prompt:{en:'Why?'} },'Because it crosses the cut.').graded,false);
+const session=createCheckpointSession(tied,{revealAfterAttempts:2});
+assert.equal(session.submit('c').level,'retry');assert.equal(session.hint().level,'hint');assert.equal(session.submit('c').level,'revealed');
+const trace=Array.from({length:8},(_,index)=>({type:index%2?'relaxEdge':'extractMin',checkpointId:`c-${index}`}));
+assert.deepEqual(selectCheckpoints(trace,{mode:'random',maximum:4},42),selectCheckpoints(trace,{mode:'random',maximum:4},42));
+assert.deepEqual(selectCheckpoints(trace,{mode:'all',eventTypes:['extractMin']},42).map(item=>item.eventType),['extractMin','extractMin','extractMin','extractMin']);
+const canonical={variables:{u:'A'},structures:{queue:[{vertex:'B',key:3}],canonical:true},visualization:{activeVertex:'A'},counters:{comparisons:1}};
+const restored=restoreCheckpointState(canonical);restored.structures.queue[0].key=99;assert.equal(canonical.structures.queue[0].key,3);
+const branch=createTemporaryBranch(canonical,{structures:{canonical:false,proposal:'B'}});assert.equal(branch.structures.canonical,false);assert.equal(canonical.structures.canonical,true);
+console.log('decision-checkpoints: all tests passed');

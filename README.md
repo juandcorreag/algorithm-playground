@@ -6,6 +6,14 @@ Entorno educativo para experimentar con crecimiento, notación asintótica y alg
 
 Release 0.1 incluye las cinco actividades originales. Release 0.2 añadió el registro central y motor instrumentado. Release 0.3 completó `operation-counter.html`. Release 0.4 añadió `case-explorer.html`. Release 0.5 incorpora `binary-search.html`, una visualización especializada que deriva el crecimiento logarítmico mediante reducción progresiva de candidatos.
 
+Release 0.7 inicia la familia Greedy con `greedy.html` y un Decision Checkpoint Engine reusable. Los checkpoints soportan selección simple/múltiple, respuestas numéricas, objetos visuales, ordenamiento, aceptar/rechazar y justificaciones cortas no calificadas. Las selecciones aleatorias utilizan una semilla reproducible; los intentos permanecen únicamente en el estado de la página.
+
+Release 0.8 añade `scheduling.html`: comparación de reglas greedy, constructor de contraejemplos, argumento de intercambio, ejecución instrumentada de Interval Scheduling e Interval Partitioning, visualización del min-heap de salones y reto de profundidad.
+
+Release 0.9 añade `shortest-path.html`: Dijkstra instrumentado, grafo y cola de prioridad, tabla de distancias/predecesores, checkpoints de `extractMin` y relajación, actividad de invariante, demostración de fallo con arista negativa, comparación de implementaciones y contraste inicial con Prim.
+
+Release 0.10 completa la familia Greedy con `mst.html`: propiedades de corte y ciclo, Prim y Kruskal instrumentados, componentes Union-Find simplificadas, comparación entre algoritmos e instancias con MST único o múltiple.
+
 ## Ejecutar
 
 Necesita un servidor estático porque JavaScript usa módulos ES. Desde esta carpeta:
@@ -23,6 +31,10 @@ node tests/math-utils.test.mjs
 node tests/algorithm-engine.test.mjs
 node tests/detective-cases.test.mjs
 node tests/case-analysis.test.mjs
+node tests/decision-checkpoints.test.mjs
+node tests/scheduling-algorithms.test.mjs
+node tests/dijkstra.test.mjs
+node tests/mst.test.mjs
 ```
 
 ## Decisiones matemáticas

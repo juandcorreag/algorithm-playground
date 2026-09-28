@@ -13,7 +13,14 @@ export function createCounters() {
 }
 
 function clone(value) {
-  return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
+  return value === undefined ? undefined : structuredClone(value);
+}
+
+function deepFreeze(value) {
+  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+  Object.freeze(value);
+  Object.values(value).forEach(deepFreeze);
+  return value;
 }
 
 function createRecorder(collectTrace = true) {
@@ -33,8 +40,10 @@ function createRecorder(collectTrace = true) {
         line: event.line,
         type: event.type,
         variables: clone(event.variables ?? {}),
+        structures: clone(event.structures ?? {}),
         counters: clone(counters),
         visualization: clone(event.visualization ?? {}),
+        checkpointId: event.checkpointId ?? null,
         message: clone(event.message ?? { es: '', en: '' })
       });
     },
@@ -50,11 +59,11 @@ export function executeAlgorithm(algorithmId, input, options = {}) {
   const safeInput = clone(input);
   const result = algorithm.execute(safeInput, options, recorder);
   const execution = recorder.snapshot();
-  return Object.freeze({
+  return deepFreeze({
     algorithmId,
     input: clone(input),
     result: clone(result),
-    counters: Object.freeze(execution.counters),
-    trace: Object.freeze(execution.trace)
+    counters: execution.counters,
+    trace: execution.trace
   });
 }
