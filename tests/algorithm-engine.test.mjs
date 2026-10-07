@@ -4,7 +4,7 @@ import { listAlgorithms, getAlgorithm } from '../js/core/algorithm-registry.js';
 import { COUNTER_KEYS, executeAlgorithm } from '../js/core/algorithm-engine.js';
 import { runOperationExperiment } from '../js/core/operation-experiments.js';
 
-assert.deepEqual(listAlgorithms().map(item => item.id), ['find-max', 'linear-search', 'bubble-sort', 'binary-search', 'interval-scheduling', 'interval-partitioning', 'dijkstra', 'prim', 'kruskal']);
+assert.deepEqual(listAlgorithms().map(item => item.id), ['find-max', 'linear-search', 'bubble-sort', 'binary-search', 'interval-scheduling', 'interval-partitioning', 'dijkstra', 'prim', 'kruskal', 'merge-sort', 'inversion-count', 'closest-pair-2d']);
 
 const descendingMax = executeAlgorithm('find-max', { array: [9, 7, 4, 1] });
 assert.equal(descendingMax.result, 9);

@@ -8,8 +8,11 @@ import { intervalPartitioningAlgorithm } from './interval-partitioning.js';
 import { dijkstraAlgorithm } from './dijkstra.js';
 import { primAlgorithm } from './prim.js';
 import { kruskalAlgorithm } from './kruskal.js';
+import { mergeSortAlgorithm } from './merge-sort.js';
+import { inversionCountAlgorithm } from './inversion-count.js';
+import { closestPairAlgorithm } from './closest-pair.js';
 
-for (const algorithm of [findMaxAlgorithm, linearSearchAlgorithm, bubbleSortAlgorithm, binarySearchAlgorithm, intervalSchedulingAlgorithm, intervalPartitioningAlgorithm, dijkstraAlgorithm, primAlgorithm, kruskalAlgorithm]) {
+for (const algorithm of [findMaxAlgorithm, linearSearchAlgorithm, bubbleSortAlgorithm, binarySearchAlgorithm, intervalSchedulingAlgorithm, intervalPartitioningAlgorithm, dijkstraAlgorithm, primAlgorithm, kruskalAlgorithm, mergeSortAlgorithm, inversionCountAlgorithm, closestPairAlgorithm]) {
   registerAlgorithm(algorithm);
 }
 

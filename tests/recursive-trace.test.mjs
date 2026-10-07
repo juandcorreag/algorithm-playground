@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {buildSplitAndCombineTrace,createRecursiveTraceRecorder,RECURSIVE_EVENT_TYPES} from '../js/core/recursive-trace.js';
+const run=buildSplitAndCombineTrace([8,3,6,2]);
+assert.equal(run.result,19);assert.ok(Object.isFrozen(run));assert.ok(run.trace.every(step=>Object.isFrozen(step)&&Object.isFrozen(step.structures)&&Object.isFrozen(step.structures.frames)));
+for(const type of RECURSIVE_EVENT_TYPES)assert.ok(run.trace.some(step=>step.type===type),`missing ${type}`);
+const created=run.trace.filter(step=>step.type==='callCreated');assert.equal(created.length,7);assert.equal(Math.max(...created.map(step=>step.structures.frames.find(frame=>frame.frameId===step.frameId).depth)),2);
+const baseReturns=run.trace.filter(step=>step.type==='baseCaseReached').map(step=>step.variables.returnValue);assert.deepEqual(baseReturns,[8,3,6,2]);
+const final=run.trace.at(-1);assert.equal(final.type,'callReturned');assert.deepEqual(final.structures.callStack,[]);assert.equal(final.structures.frames.find(frame=>frame.frameId==='sum-root').returnValue,19);
+const afterLeft=run.trace.find(step=>step.checkpointId==='after-left-sum-root');assert.deepEqual(afterLeft.structures.callStack,['sum-root']);assert.equal(afterLeft.structures.frames.find(frame=>frame.frameId==='sum-root-L').status,'returned');
+const odd=buildSplitAndCombineTrace([5,1,4]);const division=odd.trace.find(step=>step.checkpointId==='divide-sum-root');assert.deepEqual([division.variables.leftSize,division.variables.rightSize],[1,2]);assert.equal(odd.result,10);
+assert.throws(()=>buildSplitAndCombineTrace([]),/nonempty/);const recorder=createRecursiveTraceRecorder('test');assert.throws(()=>recorder.record({type:'unknown'}),/Unknown recursive event/);
+console.log('recursive-trace: all tests passed');

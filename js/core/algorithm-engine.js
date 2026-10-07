@@ -39,6 +39,8 @@ function createRecorder(collectTrace = true) {
         step: trace.length + 1,
         line: event.line,
         type: event.type,
+        frameId: event.frameId ?? null,
+        childFrameId: event.childFrameId ?? null,
         variables: clone(event.variables ?? {}),
         structures: clone(event.structures ?? {}),
         counters: clone(counters),

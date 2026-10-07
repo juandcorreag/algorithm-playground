@@ -14,6 +14,16 @@ Release 0.9 añade `shortest-path.html`: Dijkstra instrumentado, grafo y cola de
 
 Release 0.10 completa la familia Greedy con `mst.html`: propiedades de corte y ciclo, Prim y Kruskal instrumentados, componentes Union-Find simplificadas, comparación entre algoritmos e instancias con MST único o múltiple.
 
+Release 0.11 inicia Divide & Conquer con `divide-and-conquer.html`: modelo de frames recursivos, eventos semánticos, snapshots inmutables, árbol de recursión, pila de ejecución, checkpoints recursivos y actividades introductorias de anatomía y primeros niveles.
+
+Release 0.12 añade `merge-sort.html`: Merge Sort instrumentado, vistas sincronizadas de arreglo, árbol, pila y pseudocódigo, visualizador reutilizable de Merge, checkpoints de división y combinación, contadores, derivación de la recurrencia y comparación con Bubble Sort.
+
+Release 0.13 añade `inversion-counting.html`: Ranking Builder, clasificación de inversiones, SortAndCount y MergeAndCount instrumentados, conteo de pares cruzados, comparación con fuerza bruta y reflexión de correctitud no calificada automáticamente.
+
+Release 0.14 añade `recursion-trees.html` y `master-theorem.html`: modelo estructurado de recurrencias, tablas simbólicas y numéricas, visualización del balance de trabajo, análisis guiado de los tres casos, Recurrence Race, Applicability Detective y una actividad inicial de sustitución e inducción.
+
+Release 0.15 completa Divide & Conquer con `closest-pair.html`: editor de puntos, comparación por fuerza bruta y 1D, algoritmo 2D instrumentado, regiones y franja central, checkpoints geométricos, Seven-Neighbor Challenge, comparación de estrategias de ordenamiento y enlaces a Recursion Trees y Growth Explorer.
+
 ## Ejecutar
 
 Necesita un servidor estático porque JavaScript usa módulos ES. Desde esta carpeta:
@@ -35,6 +45,11 @@ node tests/decision-checkpoints.test.mjs
 node tests/scheduling-algorithms.test.mjs
 node tests/dijkstra.test.mjs
 node tests/mst.test.mjs
+node tests/recursive-trace.test.mjs
+node tests/merge-sort.test.mjs
+node tests/inversion-count.test.mjs
+node tests/recurrence-model.test.mjs
+node tests/closest-pair.test.mjs
 ```
 
 ## Decisiones matemáticas
